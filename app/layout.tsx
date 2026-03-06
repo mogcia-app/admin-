@@ -3,8 +3,8 @@ import FirebaseAnalytics from "@/components/firebase-analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tile Window Dashboard",
-  description: "Next.js App Router + TypeScript starter"
+  title: "Agency Admin",
+  description: "Agency administration console"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
