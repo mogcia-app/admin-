@@ -1,4 +1,4 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -12,8 +12,36 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+let appInstance: FirebaseApp | null = null;
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export default app;
+function hasRequiredFirebaseEnv() {
+  return Boolean(
+    firebaseConfig.apiKey &&
+      firebaseConfig.authDomain &&
+      firebaseConfig.projectId &&
+      firebaseConfig.appId
+  );
+}
+
+export function getFirebaseApp(): FirebaseApp | null {
+  if (appInstance) {
+    return appInstance;
+  }
+
+  if (!hasRequiredFirebaseEnv()) {
+    return null;
+  }
+
+  appInstance = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+  return appInstance;
+}
+
+export function getFirebaseAuth() {
+  const app = getFirebaseApp();
+  return app ? getAuth(app) : null;
+}
+
+export function getFirestoreDb() {
+  const app = getFirebaseApp();
+  return app ? getFirestore(app) : null;
+}

@@ -1,5 +1,5 @@
 import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
-import app from "@/lib/firebase";
+import { getFirebaseApp } from "@/lib/firebase";
 
 let analyticsInstance: Analytics | null = null;
 
@@ -14,6 +14,11 @@ export async function initFirebaseAnalytics(): Promise<Analytics | null> {
 
   const supported = await isSupported();
   if (!supported) {
+    return null;
+  }
+
+  const app = getFirebaseApp();
+  if (!app) {
     return null;
   }
 
